@@ -44,11 +44,11 @@ producer = KafkaProducer(
 
 @app.post("/")
 async def kafka_produce(request: Request):
-    post_data = await request.json()
+    post_data = await request.body()
     print(post_data)
     producer.send(KAFKA_TOPIC,
                   key={"key": ""},
-                  value={"message": post_data}
+                  value={"message": f"{post_data}"}
                   )
     producer.flush()
     return {"message": "Kafka Produce Done"}
