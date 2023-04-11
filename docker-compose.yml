@@ -1,0 +1,16 @@
+version: '3'
+
+services:
+
+  endpoint:
+    build:
+        dockerfile: Dockerfile
+    ports:
+      - 80:80
+    env_file:
+      - config.env
+    environment:
+      - ca=chain.pem
+      - LOG_LEVEL=2
+
+
