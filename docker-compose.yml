@@ -4,9 +4,10 @@ services:
 
   endpoint:
     build:
+        context: .
         dockerfile: Dockerfile
     ports:
-      - 80:80
+      - 5580:80
     env_file:
       - config.env
     environment:
