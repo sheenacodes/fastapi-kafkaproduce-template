@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Request
 import os
 import logging
-import json
+import json, xmltodict
 from kafka import KafkaProducer
 
 
@@ -42,13 +42,15 @@ producer = KafkaProducer(
 )
 
 
-@app.post("/")
+@app.post("/peoplecounter/v1/")
 async def kafka_produce(request: Request):
     post_data = await request.body()
-    print(post_data)
+    logging.debug(f"post observation: {post_data}")
+    data_dict = xmltodict.parse(post_data, xml_attribs=False)
+    print(data_dict)
     producer.send(KAFKA_TOPIC,
                   key={"key": ""},
-                  value={"message": f"{post_data}"}
+                  value={"message": data_dict}
                   )
     producer.flush()
     return {"message": "Kafka Produce Done"}
