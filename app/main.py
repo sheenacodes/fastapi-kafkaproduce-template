@@ -1,10 +1,12 @@
-from fastapi import FastAPI, Request
-import os
-import logging
 import json
+import logging
+import os
+
+from fastapi import FastAPI, Request
 from kafka import KafkaProducer
 
 app = FastAPI()
+
 
 def get_env_variable(name):
     try:
@@ -12,6 +14,7 @@ def get_env_variable(name):
     except KeyError:
         message = "Expected environment variable '{}' not set.".format(name)
         raise Exception(message)
+
 
 # env variables
 KAFKA_TOPIC = os.getenv('KAFKA_TOPIC')
@@ -27,7 +30,7 @@ LOG_LEVEL = os.getenv('LOG_LEVEL')
 logging.basicConfig(level=LOG_LEVEL)
 logging.getLogger().setLevel(LOG_LEVEL)
 
-#create kafka producer
+# create kafka producer
 producer = KafkaProducer(
     bootstrap_servers=KAFKA_BOOTSTRAP_SERVERS,
     security_protocol=SECURITY_PROTOCOL,
@@ -38,6 +41,7 @@ producer = KafkaProducer(
     value_serializer=lambda v: json.dumps(v).encode("ascii"),
     key_serializer=lambda v: json.dumps(v).encode("ascii"),
 )
+
 
 @app.route("/", methods=["GET", "POST", "HEAD"])
 async def root(request: Request):
